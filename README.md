@@ -2,7 +2,7 @@
 Final Term Project for CIS_3270:  This project is about simulating an airline reservation system like expedia.com or cheaptickets.com
 
 Functionality Requirements:
-\n1-Upon start of the application, the user should see a splash screen
+1-Upon start of the application, the user should see a splash screen
 2-The Main menu gives the option to the user to register or login
 3-Login requires username and password
 4-Registration requires information such as first name, last name, address, zip, state, username, password, email, SSN and a security question for password recovery.
