@@ -1,171 +1,97 @@
 package application;
-	
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.stage.Stage;
+import javafx.stage.*;
+
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ComboBox;
+import edu.gsu.common.Action;
+import edu.gsu.common.Customer;
+import edu.gsu.gui.AccountPage;
+import edu.gsu.gui.ExceptionHandler;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;;
 
 public class Main extends Application {
-	
+
 	Stage window;
-	TableView<Product> table;
-	TextField nameInput, priceInput, quantityInput;
-
-
+	Scene scene1, scene2;
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
-		window.setTitle("TableView Demo");
+		window.setTitle("Welcome");
 		
-		//Name column
-		TableColumn<Product, String> nameColumn = new TableColumn<>("Item Name");
-		nameColumn.setMinWidth(200);
-		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+		Label label1 = new Label("Welcome");
 		
-		//Price column
-		TableColumn<Product, Double> priceColumn = new TableColumn<>("Item Price");
-		priceColumn.setMinWidth(100);
-		priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+		//GridPane with 10px padding around edge
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(35,10,10,275));
+		grid.setVgap(8);
+		grid.setHgap(10);
 		
-		//Quantity column
-		TableColumn<Product, Integer> quantityColumn = new TableColumn<>("Item Quantity");
-		quantityColumn.setMinWidth(200);
-		quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-		
+		/* Name label
+		Label nameLabel = new Label("Username:");
+		GridPane.setConstraints(nameLabel, 0, 0);
+		*/
 		//Name input
-		nameInput = new TextField();
-		nameInput.setPromptText("Name");
-		nameInput.setMinWidth(100);
+		TextField nameInput = new TextField();
+		nameInput.setText("Username");
+		GridPane.setConstraints(nameInput, 0, 0);
 		
-		//Price input
-		priceInput = new TextField();
-		priceInput.setPromptText("Price");
+		/*Pass label
+		Label passLabel = new Label("Password:");
+		GridPane.setConstraints(passLabel, 0, 1);
+		*/
 		
-		//Quantity input
-		quantityInput = new TextField();
-		quantityInput.setPromptText("Quantity");
+		//Password input
+		TextField passInput = new TextField();
+		passInput.setText("Password");
+		GridPane.setConstraints(passInput, 1, 0);
 		
-		//Button
-		Button addButton = new Button("Add");
-		addButton.setOnAction(e -> addButtonClicked());
-		Button deleteButton = new Button("Delete");
-		deleteButton.setOnAction(e -> deleteButtonClicked());
+		Button loginButton = new Button("Log in");
+		GridPane.setConstraints(loginButton, 3, 0);
+		//loginButton.setStyle("-fx-background-radius: 5"); <--- to make button more rounded
 		
-		HBox hBox = new HBox();
-		hBox.setPadding(new Insets(10,10,10,10));
-		hBox.setSpacing(10);
-		hBox.getChildren().addAll(nameInput, priceInput, quantityInput, addButton, deleteButton);
-					
+		Button registerButton = new Button("New User");
+		GridPane.setConstraints(registerButton, 4, 0);
+		registerButton.setOnAction(e -> window.setScene(scene2));
 		
-		table = new TableView<>();
-		table.setItems(getProduct());
-		table.getColumns().addAll(nameColumn, priceColumn, quantityColumn);
 		
-		VBox vBox = new VBox();
-		vBox.getChildren().addAll(table, hBox);
-
-		Scene scene = new Scene(vBox);
+		/*Second scene after clicking Sign Up button
+		VBox layout2 = new VBox(20);
+		layout2.getChildren().addAll(registerButton);
+		scene2 = new Scene(layout2, 500, 500);
+		*/
+		
+		//registerButton.setStyle("-fx-background-radius: 5"); <--- to make button more rounded
+		
+		//Add everything to grid
+		grid.getChildren().addAll(/*nameLabel,*/ nameInput, /*passLabel,*/ passInput, loginButton, registerButton);
+		
+		//Initial scene
+		Scene scene = new Scene(grid, 1000, 100);
+		scene.getRoot().setStyle("-fx-font-family: 'serif'");
+		scene.getRoot().setStyle("-fx-background-color: '#6495ED'");
 		window.setScene(scene);
 		window.show();
-	}
-	
-	//Add button clicked
-	public void addButtonClicked() {
-		Product product = new Product();
-		product.setName(nameInput.getText());
-		product.setPrice(Double.parseDouble(priceInput.getText()));
-		product.setQuantity(Integer.parseInt(quantityInput.getText()));
-		table.getItems().add(product);
-		nameInput.clear();
-		priceInput.clear();
-		quantityInput.clear();
-	}
-	
-	//Delete button clicked
-	public void deleteButtonClicked() {
-		ObservableList<Product> productSelected, allProducts;
-		allProducts = table.getItems();
-		productSelected = table.getSelectionModel().getSelectedItems();
 		
-		productSelected.forEach(allProducts::remove);
-	}
-	
-	//Get all of the products *** THIS WILL USUALLY BE A DATABASE!!!!!
-	public ObservableList<Product> getProduct() {
-		ObservableList<Product> products = FXCollections.observableArrayList();
-		products.add(new Product("Laptop", 859.00, 20));
-		products.add(new Product("Bouncy Ball", 2.40, 198));
-		products.add(new Product("Toilet", 90.00, 74));
-		products.add(new Product("Notebook", 2.51, 12));
-		products.add(new Product("Corn", 1.49, 840));
-		return products;
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
