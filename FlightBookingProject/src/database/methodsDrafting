@@ -1,0 +1,295 @@
+DB OBJECTS + METHODS
+
+________________________________________________________________________________________
+
+
+//take entry data from registrationBox and convert to string
+//(firstName, lastName, address, zipCode, state, userName, passWord, email, ssn, securityWord)
+//and create new user row in Users table, and update
+
+import java.io.DataInputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+
+class createNewCustomerRow {
+
+	Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432", "postgres", "postgres")
+
+	DataInputStream registrationBox = new DataInputStream(System.in);
+
+	String firstName = registrationBox.readLine();
+	String lastName = registrationBox.readLine();
+	String address = registrationBox.readLine();
+	int zipCode = registrationBox.readLine();
+	String state = registrationBox.readLine();
+	String userName = registrationBox.readLine();
+	String passWord = registrationBox.readLine();
+	String email = registrationBox.readLine();
+	String ssn = registrationBox.readLine();
+	String securityWord = registrationBox.readLine();
+	int userID = registrationBox.readLine();
+	int customerID = registrationBox.readLine();
+	
+	PreparedStatement psNewCust = con.preparestatement("INSERT INTO Customers VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+	
+	psNewCust.setString(1, firstName);
+	psNewCust.setString(2, lastName);
+	psNewCust.setString(3, address);
+	psNewCust.setInt(4, zipCode);
+	psNewCust.setString(5, state);
+	psNewCust.setString(6, userName);
+	psNewCust.setString(7, passWord);
+	psNewCust.setString(8, email);
+	psNewCust.setString(9, ssn);
+	psNewCust.setString(10, securityWord);
+	psNewCust.setInt(11, userID);
+	psNewCust.setInt(12, customerID);
+	
+	psNewCust.executeUpdate();
+	
+	con.close();
+
+}
+
+
+________________________________________________________________________________________
+
+
+//take strings from loginBox entries (userName, passWord) and query Users table for match
+
+class authLogin {
+
+	Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432", "postgres", "postgres")
+
+	DataInputStream loginBox = new DataInputStream(System.in);
+
+	String userName = loginBox.readLine();
+	String passWord = loginBox.readLine();
+
+	PreparedStatement selectCredentials = con.preparestatement("SELECT * FROM Users WHERE userName = ? AND passWord = ?");
+	
+	selectCredentials.setString(1, userName);
+	selectCredentials.setString(2, passWord);
+	
+	ResultSet credentials = preparedStatement.execute();
+	
+	
+
+
+
+
+
+________________________________________________________________________________________
+
+
+//take string from resetAnswer entry and query Customers for securityWord match
+
+
+
+
+________________________________________________________________________________________
+
+//get strings from searchFlights entries and query Flights table for match
+//with all parameters (departureDate, departureAirport, arrivalAirport)
+
+
+
+
+
+
+
+________________________________________________________________________________________
+
+//addFlight:
+//get strings from addFlight box entries, insert into new row in Flights table
+
+class addFlight {
+
+	Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432", "postgres", "postgres")
+
+	DataInputStream addFlightBox = new DataInputStream(System.in);
+
+	int flightID = addFlightBox.readLine();
+	String departureAirport = addFlightBox.readLine();
+	date departureDate = addFlightBox.readLine();
+	time departureTime = addFlightBox.readLine();
+	String arrivalAirport = addFlightBox.readLine();
+	date arrivalDate = addFlightBox.readLine();
+	time arrivalTime = addFlightBox.readLine();
+	int seatsAvailable = addFlightBox.readLine();
+
+	
+	PreparedStatement psNewFlight = con.preparestatement("INSERT INTO Flights VALUES (?,?,?,?,?,?,?,?)");
+	
+	psNewFlight.setInt(1, flightID);
+	psNewFlight.setString(2, departureAirport);
+	psNewFlight.setDate(3, departureDate);
+	psNewFlight.setTime(4, departureTime);
+	psNewFlight.setString(5, arrivalAirport);
+	psNewFlight.setDate(6, arrivalDate);
+	psNewFlight.setTime(7, arrivalTime);
+	psNewFlight.setInt(8, seatsAvailable);
+	
+	psNewFlight.executeUpdate();
+	//to work with result set, do this instead:
+	//ResultSet rs = psNewFlight.executeUpdate();
+	
+	
+	con.close();
+
+}
+
+
+________________________________________________________________________________________
+
+//updateFlight:
+//select flightID from Flights and update
+//simultaneously check for flightID match in Tickets table, update if match found
+//need to use joins for this??
+
+
+
+
+
+________________________________________________________________________________________
+
+//deleteFlight:
+//delete row from Flights table by selecting flightID
+//simultaneously check for flightID match in Tickets table, delete if match found
+
+
+
+
+
+________________________________________________________________________________________
+
+//bookedTickets:
+//query Tickets table for any/all booked tickets
+//all tickets have a userID and flightID
+
+
+
+
+________________________________________________________________________________________
+
+//reserveTicket:
+//from searchFlights match/selection, query Flights and get flightID
+//decrement seatsAvailable by -1 for flightID in Flights
+//query Tickets table and create new ticket row with flightID and customerID
+//create new row entry in bookedTickets
+
+
+
+
+
+
+
+
+class reserveTicket {
+
+	Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432", "postgres", "postgres")
+
+	DataInputStream createNewTicket = new DataInputStream(System.in);
+
+	int ticketID = //generate new ticketID - how??
+	int flightID = //get from searchFlights selection - how?
+	int userID = //get from current logged in user - how?
+	
+	PreparedStatement psNewTicket = con.preparestatement("INSERT INTO Tickets VALUES (?,?,?)");
+	
+	psNewTicket.setInt(1, ticketID);
+	psNewTicket.setInt(2, flightID);
+	psNewTicket.setInt(3, userID);
+	
+	psNewTicket.executeUpdate();
+	
+	con.close();
+
+}
+
+
+________________________________________________________________________________________
+
+//updateTicket:
+//select ticketID from Tickets and update
+//query Flights for matching flightID
+//check for seatsAvailable - increment/decrement as needed for flightID
+//query bookedTickets and update
+
+
+
+
+
+
+
+________________________________________________________________________________________
+
+//cancelTicket:
+//query Tickets and delete ticket row
+//query Flights and get matching flightID
+//increment seatsAvailable by 1 for flightID
+//query bookedTickets and delete
+
+
+
+
+
+_________________________________________________________________________________________
+
+//view bookedTickets for specific user:
+//query bookedTickets and return only tickets matching customerID (or userID?)
+
+
+
+
+_______________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+
+
+
+
+
+
+
+________________________________________________________________________________________
+
+
+
+
+
+
+________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
