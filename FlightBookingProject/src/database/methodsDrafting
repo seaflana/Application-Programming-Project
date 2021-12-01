@@ -5,7 +5,7 @@ ________________________________________________________________________________
 
 //take entry data from registrationBox and convert it to string
 //(firstName, lastName, address, zipCode, state, userName, passWord, email, ssn, securityWord)
-//and create new user row in Users table, and update
+//and create new user row in Users table, and update table
 
 import java.io.DataInputStream;
 import java.sql.Connection;
