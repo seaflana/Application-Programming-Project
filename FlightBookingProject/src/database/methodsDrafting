@@ -2,7 +2,7 @@ DB OBJECTS + METHODS
 
 ________________________________________________________________________________________
 
-
+ 
 //take entry data from registrationBox and convert to string
 //(firstName, lastName, address, zipCode, state, userName, passWord, email, ssn, securityWord)
 //and create new user row in Users table, and update
